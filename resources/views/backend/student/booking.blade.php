@@ -29,7 +29,7 @@
 
                         <div class="form-group">
                             <label>Hostel Name</label>
-                            <select class="form-select form-control @error('hostel_id') is-invalid @enderror" name="hostel">
+                            <select class="form-select form-control @error('hostel_id') is-invalid @enderror" name="hostel" id="hostelList">
                                 <option selected='' disabled>Select type</option>
 
                                 @foreach ($hostel as $hostel )
@@ -53,10 +53,10 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label >Room no.</label>
-                            <select class="form-select form-control @error('roomNumber') is-invalid @enderror" name="hostel_id">
+                            <select class="form-select form-control @error('roomNumber') is-invalid @enderror" name="hostel_id" id="roomList">
                                 <option selected='' disabled>Select type</option>
 
-                
+
 
                             </select>
                             @error('roomNumber')
@@ -70,7 +70,7 @@
 
                 </div>
 
-    
+
 
 
 
@@ -87,3 +87,49 @@
     </div>
 </div>
 @endsection
+
+@section('scripts')
+    <script>
+        let hotelId = document.getElementById('hostelList');
+        let roomList = document.getElementById('roomList');
+        hotelId.addEventListener('change', selectAction);
+
+        function selectAction(e) {
+            console.clear();
+           
+            let id = hotelId.value;
+            let url = "{{ route('listHostelRoom') }}";
+
+            const data = { hotelId: id };
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': '*/*',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify(data),
+            })
+            .then((response) => response.json())
+            .then((result) => {
+                if(result.rooms.length > 0) {
+                    for(var i = 0; i < result.rooms.length; i++ ) {
+                        if(result.rooms[i].available_status == 0) {
+                            var option = document.createElement("option");
+                            option.value = result.rooms[i].id;
+                            option.text = result.rooms[i].room_no;
+                            roomList.add(option);
+                        }
+                    }
+                }
+
+            }).catch((error) => {
+                console.error('Error:', error);
+            });
+
+
+        }
+    </script>
+@endsection
+
+

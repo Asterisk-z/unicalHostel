@@ -46,14 +46,14 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
 
     Route::get('/book/hostel', [UserController::class, 'book'])->name('book.hostel');
 
-    Route::get('/student/hostel', [HostelController::class, 'listHostelRoom'])->name('listHostelRoom');
+    Route::post('/student/hostel', [HostelController::class, 'listHostelRoom'])->name('listHostelRoom');
 
     // Route::post('/pay/portal', [PortalFeeController::class, 'redirectToGateway'])->name('pay');
 
     Route::post('/pay', [PortalFeeController::class, 'pay'])->name('paying');
     Route::get('/webhook', [PortalFeeController::class, 'webhook'])->name('hooks');
 
- 
+
 
     Route::get('/portal/callback', [PortalFeeController::class, 'handleCallBack']);
 

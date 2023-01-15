@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hostel;
+use App\Models\Room;
 // use App\Models\PortalFee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -146,7 +147,7 @@ class HostelController extends Controller
     }
 
 
-    
+
 
 
     /**
@@ -166,5 +167,12 @@ class HostelController extends Controller
         return redirect()->back()->with('success_message','Hostel has been deleted successfully', compact('hostel'));
 
 
+    }
+
+    public function listHostelRoom() {
+        $rooms = Room::where('hostel_id',  request('hotelId'))->get();
+        return response()->json([
+            "rooms" => $rooms,
+        ], 200);
     }
 }
